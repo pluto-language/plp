@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/Zac-Garby/plp/args"
+	"github.com/Zac-Garby/plp/operators"
 )
 
 func main() {
@@ -25,5 +26,19 @@ func main() {
 		return
 	}
 
-	fmt.Println(ops)
+	for _, op := range ops {
+		var err error
+
+		switch op.Type {
+		case args.INSTALL:
+			err = operators.Install(op.Package)
+		case args.REMOVE:
+			err = operators.Remove(op.Package)
+		}
+
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	}
 }
