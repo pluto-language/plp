@@ -64,17 +64,25 @@ func main() {
 	for _, op := range ops {
 		var err error
 
+		fmt.Printf(" - ")
+
 		switch op.Type {
 		case args.INSTALL:
+			fmt.Printf("installing %s", op.Package)
 			err = operators.Install(op.Package)
 			installs = append(installs, op.Package)
 		case args.REMOVE:
+			fmt.Printf("removing %s", op.Package)
 			err = operators.Remove(op.Package)
 			removes = append(removes, op.Package)
 		case args.UPDATE:
+			fmt.Printf("updating %s", op.Package)
 			err = operators.Update(op.Package)
 			updates = append(updates, op.Package)
 		}
+
+		fmt.Print("	")
+		color.Green("done")
 
 		if err != nil {
 			fmt.Println(err)
