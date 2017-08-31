@@ -1,6 +1,6 @@
 # plp
 
-[Pl]()uto [P]()ackage Manager.
+[Pl](#)uto [P](#)ackage Manager.
 
 Doesn't really do much at the moment, but in the future, youwill be
 able to install, remove, and update, Pluto packages.
