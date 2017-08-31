@@ -85,7 +85,7 @@ func main() {
 
 func printStat(colour *color.Color, prefix string, count int) {
 	if count > 0 {
-		colour.Printf("%-10s ", prefix)
+		colour.Printf("%10s ", prefix)
 
 		if count > 1 {
 			fmt.Printf("%d packages", count)
