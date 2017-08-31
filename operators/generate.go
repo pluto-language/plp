@@ -58,7 +58,7 @@ func Generate() error {
 		return err
 	}
 
-	fmt.Printf("\nPackage '%s' has been created!\n", opts.title)
+	color.Cyan("\nPackage '%s' has been created!\n", opts.title)
 
 	return nil
 }
