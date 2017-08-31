@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/fatih/color"
 
@@ -55,9 +56,9 @@ func main() {
 	}
 
 	var (
-		installs = 0
-		removes  = 0
-		updates  = 0
+		installs []string
+		removes  []string
+		updates  []string
 	)
 
 	for _, op := range ops {
@@ -66,13 +67,13 @@ func main() {
 		switch op.Type {
 		case args.INSTALL:
 			err = operators.Install(op.Package)
-			installs++
+			installs = append(installs, op.Package)
 		case args.REMOVE:
 			err = operators.Remove(op.Package)
-			removes++
+			removes = append(removes, op.Package)
 		case args.UPDATE:
 			err = operators.Update(op.Package)
-			updates++
+			updates = append(updates, op.Package)
 		}
 
 		if err != nil {
@@ -94,7 +95,9 @@ func main() {
 	printStat(cyan, "UPDATED", updates)
 }
 
-func printStat(colour *color.Color, prefix string, count int) {
+func printStat(colour *color.Color, prefix string, pkgs []string) {
+	count := len(pkgs)
+
 	if count > 0 {
 		colour.Printf("%10s ", prefix)
 
@@ -104,6 +107,6 @@ func printStat(colour *color.Color, prefix string, count int) {
 			fmt.Printf("1 package")
 		}
 
-		fmt.Println()
+		fmt.Printf(" (%s)\n", strings.Join(pkgs, ", "))
 	}
 }
