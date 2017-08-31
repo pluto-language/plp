@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/fatih/color"
@@ -66,27 +67,59 @@ func promptOptions() (*genOpts, error) {
 	reader := bufio.NewReader(os.Stdin)
 	colour := color.New(color.Bold)
 
-	title, err := promptOption("package title", reader, colour)
+	// A title is entirely composed of lowercase letters, digits, dashes, and underscores
+	title, err := promptOption(
+		"package title",
+		`^[a-z\d-_]+$`,
+		"the title can only contain lowercase letters, digits, dashes, and underscores",
+		reader,
+		colour,
+	)
+
 	if err != nil {
 		return nil, err
 	}
 
-	display, err := promptOption("display name", reader, colour)
+	display, err := promptOption(
+		"display name",
+		`^.+$`,
+		"the display name must be at least 1 character",
+		reader,
+		colour,
+	)
 	if err != nil {
 		return nil, err
 	}
 
-	description, err := promptOption("description", reader, colour)
+	description, err := promptOption(
+		"description",
+		`^.+$`,
+		"the description must be at least 1 character",
+		reader,
+		colour,
+	)
 	if err != nil {
 		return nil, err
 	}
 
-	author, err := promptOption("author", reader, colour)
+	author, err := promptOption(
+		"author",
+		`^.+$`,
+		"the author's name must be at least 1 character",
+		reader,
+		colour,
+	)
 	if err != nil {
 		return nil, err
 	}
 
-	version, err := promptOption("version", reader, colour)
+	version, err := promptOption(
+		"version",
+		`^\d+\.\d+\.\d+$`,
+		"the version must be three integers separated by dots",
+		reader,
+		colour,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -100,15 +133,36 @@ func promptOptions() (*genOpts, error) {
 	}, nil
 }
 
-func promptOption(msg string, reader *bufio.Reader, colour *color.Color) (string, error) {
-	colour.Printf("%15s: ", msg)
+func promptOption(msg, pattern, errMsg string, reader *bufio.Reader, colour *color.Color) (string, error) {
+	var (
+		text string
+		err  error
+	)
 
-	text, err := reader.ReadString('\n')
-	if err != nil {
-		return "", err
+	for {
+		colour.Printf("%15s: ", msg)
+
+		text, err = reader.ReadString('\n')
+		if err != nil {
+			return "", err
+		}
+
+		text = strings.TrimSpace(text)
+
+		matches, err := regexp.MatchString(pattern, text)
+		if err != nil {
+			return "", err
+		}
+
+		if matches {
+			goto done
+		}
+
+		color.Red("  invalid input: %s", errMsg)
 	}
 
-	return strings.TrimSpace(text), nil
+done:
+	return text, nil
 }
 
 func applyOptionsToTemplate(dir string, opts *genOpts) error {
