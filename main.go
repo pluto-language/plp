@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fatih/color"
+
 	"github.com/Zac-Garby/plp/args"
 	"github.com/Zac-Garby/plp/operators"
 )
@@ -16,6 +18,7 @@ func main() {
   +<package>	installs a package
   -<package>	removes a package
   ^<package>	updates a package
+  *<package>    generates a package
 `)
 
 		return
@@ -32,16 +35,17 @@ func main() {
 		return
 	}
 
-	ops, err := args.Parse(arg)
+	ops, err := args.Parse(arg[1:])
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	var (
-		installs = 0
-		removes  = 0
-		updates  = 0
+		installs  = 0
+		removes   = 0
+		updates   = 0
+		generates = 0
 	)
 
 	for _, op := range ops {
@@ -65,5 +69,30 @@ func main() {
 		}
 	}
 
-	fmt.Printf("\n%d package(s) installed\n%d package(s) removed\n%d package(s) updated\n", installs, removes, updates)
+	fmt.Println()
+
+	var (
+		green = color.New(color.FgGreen, color.Bold)
+		cyan  = color.New(color.FgCyan, color.Bold)
+		red   = color.New(color.FgRed, color.Bold)
+	)
+
+	printStat(green, "INSTALLED", installs)
+	printStat(red, "REMOVED", removes)
+	printStat(cyan, "UPDATED", updates)
+	printStat(cyan, "GENERATED", generates)
+}
+
+func printStat(colour *color.Color, prefix string, count int) {
+	if count > 0 {
+		colour.Printf("%-10s ", prefix)
+
+		if count > 1 {
+			fmt.Printf("%d packages", count)
+		} else {
+			fmt.Printf("1 package")
+		}
+
+		fmt.Println()
+	}
 }
