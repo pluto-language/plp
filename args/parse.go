@@ -17,6 +17,9 @@ const (
 
 	// UPDATE - Updates a package to the latest version
 	UPDATE opType = "update"
+
+	// GENERATE - Generates a new package
+	GENERATE opType = "generate"
 )
 
 // Operation represents an operation, such as install
@@ -39,6 +42,7 @@ func Parse(args []string) ([]Operation, error) {
 		'+': INSTALL,
 		'-': REMOVE,
 		'^': UPDATE,
+		':': GENERATE,
 	}
 
 	for _, arg := range args {
