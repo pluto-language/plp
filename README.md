@@ -2,8 +2,7 @@
 
 [Pl](#)uto [P](#)ackage Manager.
 
-Doesn't really do much at the moment, but in the future, you will be
-able to install, remove, and update, Pluto packages.
+An easy way to install, remove, and update Pluto packages.
 
 ```
 plp +package    # installs a package
