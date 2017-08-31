@@ -42,6 +42,9 @@ func main() {
 		case args.REMOVE:
 			err = operators.Remove(op.Package)
 			removes++
+		case args.UPDATE:
+			err = operators.Update(op.Package)
+			updates++
 		}
 
 		if err != nil {
