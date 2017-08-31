@@ -3,7 +3,6 @@ package operators
 import (
 	"errors"
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"gopkg.in/src-d/go-git.v4"
@@ -31,8 +30,7 @@ func Install(pkg string) error {
 	}
 
 	_, err = git.PlainClone(filepath.Join(root, "libraries", pkg), false, &git.CloneOptions{
-		URL:      repo,
-		Progress: os.Stdout,
+		URL: repo,
 	})
 
 	if err != nil {
