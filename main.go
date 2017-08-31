@@ -26,14 +26,22 @@ func main() {
 		return
 	}
 
+	var (
+		installs = 0
+		removes  = 0
+		updates  = 0
+	)
+
 	for _, op := range ops {
 		var err error
 
 		switch op.Type {
 		case args.INSTALL:
 			err = operators.Install(op.Package)
+			installs++
 		case args.REMOVE:
 			err = operators.Remove(op.Package)
+			removes++
 		}
 
 		if err != nil {
@@ -41,4 +49,6 @@ func main() {
 			os.Exit(1)
 		}
 	}
+
+	fmt.Printf("\n%d package(s) installed\n%d package(s) removed\n%d package(s) updated\n", installs, removes, updates)
 }
