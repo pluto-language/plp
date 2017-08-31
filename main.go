@@ -11,11 +11,12 @@ import (
 func main() {
 	arg := os.Args
 	if len(arg) <= 1 {
-		fmt.Println(`plp - Pluto Package Manager
+		fmt.Println(`  < plp - Pluto Package Manager >
 
   +<package>	installs a package
   -<package>	removes a package
-  ^<package>	updates a package`)
+  ^<package>	updates a package
+`)
 
 		return
 	}
