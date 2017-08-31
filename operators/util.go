@@ -1,7 +1,11 @@
 package operators
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"os/user"
@@ -26,6 +30,9 @@ func getRoot() (string, error) {
 }
 
 func downloadDirectory() error {
+	fmt.Print("downloading packages directory... ")
+	defer fmt.Println("DONE")
+
 	var (
 		url       = "https://raw.githubusercontent.com/pluto-language/packages/master/packages.json"
 		root, err = getRoot()
@@ -55,4 +62,41 @@ func downloadDirectory() error {
 	}
 
 	return nil
+}
+
+func getPackages() (map[string]string, error) {
+	fmt.Print("parsing packages directory... ")
+	defer fmt.Println("DONE")
+
+	root, err := getRoot()
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := ioutil.ReadFile(filepath.Join(root, "libraries", "packages.json"))
+	if err != nil {
+		return nil, err
+	}
+
+	weak := map[string]interface{}{}
+
+	err = json.Unmarshal(data, &weak)
+	if err != nil {
+		return nil, err
+	}
+
+	packages := map[string]string{}
+
+	for pkg, v := range weak {
+		repo, ok := v.(string)
+
+		if !ok {
+			msg := fmt.Sprintf("packages.json: invalid repository for %s. submit an issue to get it fixed", pkg)
+			return nil, errors.New(msg)
+		}
+
+		packages[pkg] = repo
+	}
+
+	return packages, nil
 }
