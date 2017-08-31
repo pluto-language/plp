@@ -15,10 +15,12 @@ func main() {
 	if len(arg) <= 1 {
 		fmt.Println(`  < plp - Pluto Package Manager >
 
-  +<package>	installs a package
-  -<package>	removes a package
-  ^<package>	updates a package
-  *<package>    generates a package
+  plp +<package>	installs a package
+  plp -<package>	removes a package
+  plp ^<package>	updates a package
+
+  plp list          lists all available packages
+  plp gen           creates a new package
 `)
 
 		return
@@ -35,6 +37,17 @@ func main() {
 		return
 	}
 
+	if arg[1] == "gen" {
+		err := operators.Generate()
+
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		return
+	}
+
 	ops, err := args.Parse(arg[1:])
 	if err != nil {
 		fmt.Println(err)
@@ -42,10 +55,9 @@ func main() {
 	}
 
 	var (
-		installs  = 0
-		removes   = 0
-		updates   = 0
-		generates = 0
+		installs = 0
+		removes  = 0
+		updates  = 0
 	)
 
 	for _, op := range ops {
@@ -80,7 +92,6 @@ func main() {
 	printStat(green, "INSTALLED", installs)
 	printStat(red, "REMOVED", removes)
 	printStat(cyan, "UPDATED", updates)
-	printStat(cyan, "GENERATED", generates)
 }
 
 func printStat(colour *color.Color, prefix string, count int) {
