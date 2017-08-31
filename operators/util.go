@@ -30,9 +30,6 @@ func getRoot() (string, error) {
 }
 
 func downloadDirectory() error {
-	fmt.Print("downloading packages directory... ")
-	defer fmt.Println("DONE")
-
 	var (
 		url       = "https://raw.githubusercontent.com/pluto-language/packages/master/packages.json"
 		root, err = getRoot()
@@ -65,9 +62,6 @@ func downloadDirectory() error {
 }
 
 func getPackages() (map[string]string, error) {
-	fmt.Print("parsing packages directory... ")
-	defer fmt.Println("DONE")
-
 	root, err := getRoot()
 	if err != nil {
 		return nil, err

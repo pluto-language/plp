@@ -2,7 +2,6 @@ package operators
 
 import (
 	"bufio"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -37,11 +36,8 @@ func Generate() error {
 
 	dir := filepath.Join(pwd, opts.title)
 
-	fmt.Println()
-
 	_, err = git.PlainClone(dir, false, &git.CloneOptions{
-		URL:      "https://github.com/pluto-language/package-template",
-		Progress: os.Stdout,
+		URL: "https://github.com/pluto-language/package-template",
 	})
 
 	if err != nil {
