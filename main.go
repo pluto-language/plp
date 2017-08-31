@@ -21,7 +21,18 @@ func main() {
 		return
 	}
 
-	ops, err := args.Parse(os.Args[1:])
+	if arg[1] == "list" {
+		err := operators.List()
+
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		return
+	}
+
+	ops, err := args.Parse(arg)
 	if err != nil {
 		fmt.Println(err)
 		return
